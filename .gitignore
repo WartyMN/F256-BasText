@@ -50,3 +50,13 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Folders I don't want in Repo
+gadget_new/
+build_cc65/
+
+# blocks I added
+compile_flags.txt
+.DS_Store
+_build_vbcc.sh
+_ProjectName.txt
