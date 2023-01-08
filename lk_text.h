@@ -49,10 +49,10 @@
 /*****************************************************************************/
 
 // project includes
-#include "lk_general.h"
 
 // C includes
 #include <stdbool.h>
+#include <stdint.h>
 
 // cc65 includes
 

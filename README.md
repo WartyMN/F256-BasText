@@ -9,7 +9,7 @@ F256 version note:
 * The intended purpose of this program is to let you load a Commodore BASIC file you might already have on a rusty 5.25" floppy, and see what's there, and maybe take a stab at converting it to SuperBASIC. Only the most trivial of trivial programs would actually work out of the box. 
 
 F256 status
-* file write currently does not work. Working with Gadget on that. It is currently disabled (de-tokenized program is output to screen only). Re-enable at your own risk by defining "TRY_TO_WRITE_TO_DISK".
+* Working
 * I have not adjusted the PETSCII to ASCII conversion matrix, but will, once the Foenix font is updated to final state. I am expecting at least one more revision to the font, but it is waiting on decisions about next VICKY update.
 
 

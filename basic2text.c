@@ -15,7 +15,6 @@
 
 // project includes
 #include "basic2text.h"
-#include "lk_general.h"
 #include "lk_text.h"
 #include "lk_sys.h"
 
@@ -54,11 +53,6 @@ static char*		out_filename = out_filename_buf;
 /*****************************************************************************/
 /*                             Global Variables                              */
 /*****************************************************************************/
-
-static char		temp_buff_192b_1[192];
-char* 			global_string_buffer = temp_buff_192b_1;
-
-
 
 
 /*****************************************************************************/
@@ -185,9 +179,6 @@ bool GetStringFromUser(char* the_buffer, int8_t the_max_length, int8_t start_x, 
 		return false;
 	}
 
-	// turn off cursor
-	//Sys_EnableTextModeCursor(false);
-
 	return true;
 }
 
@@ -199,9 +190,6 @@ bool GetStringFromUser(char* the_buffer, int8_t the_max_length, int8_t start_x, 
 // display error message, wait for user to confirm, and exit
 void exit_with_wait(uint8_t the_error_number)
 {
-	uint8_t		x1 = 0;
-	uint8_t		y1 = 0;
-
 	printf("exit code: %u \n", the_error_number);
 	
 	// turn cursor back on
@@ -210,7 +198,6 @@ void exit_with_wait(uint8_t the_error_number)
 	printf("Hit any key \n");
 	getchar();
 	
-	//asm("JMP ($FFFC)");
 	exit(0);	
 }
 
@@ -225,7 +212,6 @@ int main(void)
 	int16_t		cbm_addr;
 	int16_t		addr_hi;
 	int16_t		addr_lo;
-	int16_t		test_addr;
 	uint8_t		feedback_y = FILENAME_INPUT_Y-1; // for drawing instructions/getting input
 	uint8_t		error_code = ERROR_NO_ERROR;
 
@@ -245,7 +231,7 @@ int main(void)
 	}
 	
 	// clear screen, set text mode (no overlay), turn off visual cursor
-	Sys_SetBorderSize(16, 16);
+// 	Sys_SetBorderSize(16, 16);
 	Sys_EnableTextModeCursor(false);
 	Text_ClearScreen(COLOR_BRIGHT_WHITE, COLOR_BLACK);
 
@@ -284,8 +270,6 @@ int main(void)
 	}
 
 	// get first 2 bytes of input file - used to determine what kind of BASIC it is (2.0 vs 7.0, etc.)
-	printf("Getting initial address... \n");
-
 	addr_lo = fgetc(in_file); // low byte
 
 	if (addr_lo < 0)
@@ -295,8 +279,6 @@ int main(void)
 		goto error;
 	}
 	
-	printf("first char of addr=%x \n", addr_lo);
-
 	addr_hi = fgetc(in_file); // low byte
 
 	if (addr_hi < 0)
@@ -306,35 +288,19 @@ int main(void)
 		goto error;
 	}
 	
-	printf("2nd char of addr=%x \n", addr_hi);
 	cbm_addr = addr_lo + (addr_hi << 8);
 
 	printf("initial address=%x (%x, %x) \n", cbm_addr, addr_hi, addr_lo);
 
-	#ifdef TRY_TO_WRITE_TO_DISK
-		// test if fgetc still works after opening another file - this one should work
-		addr_lo = fgetc(in_file); // low byte
-		addr_hi = fgetc(in_file); // low byte
-		test_addr = addr_lo + (addr_hi << 8);
-		printf("first line address=%x (%x, %x); in_file=%p \n", test_addr, addr_hi, addr_lo, in_file);
+	// try to open output for writing
+	out_file = fopen(out_filename, "w");
 
-		// try to open output for writing
-		printf("Attempting to open output file... \n");
-		out_file = fopen(out_filename, "w");
-
-		if (out_file == NULL)
-		{
-			printf("Error: could not open file for writing. \n");
-			error_code = ERROR_UNABLE_TO_OPEN_OUTPUT_FILE;
-			goto error;
-		}
-
-		// test if fgetc still works after opening another file - this one will fail
-		addr_lo = fgetc(in_file); // low byte
-		addr_hi = fgetc(in_file); // low byte
-		test_addr = addr_lo + (addr_hi << 8);
-		printf("next 2 bytes=%x (%x, %x); in_file=%p \n", test_addr, addr_hi, addr_lo, in_file);
-	#endif
+	if (out_file == NULL)
+	{
+		printf("Error: could not open file for writing. \n");
+		error_code = ERROR_UNABLE_TO_OPEN_OUTPUT_FILE;
+		goto error;
+	}
 	
 	/* Now convert the file to text */
 	printf("Converting file... \n");
@@ -342,15 +308,10 @@ int main(void)
 
 	/* Close files */
 	fclose(in_file);
-	#ifdef TRY_TO_WRITE_TO_DISK
-		fclose(out_file);
-	#endif
+	fclose(out_file);
 	
 	printf("Done \n");
 	
-	// jump to reset vector to get out of here and back to DOS. zzzzzap!
-	//asm("jmp $FFFC");
-
 	exit_with_wait(error_code);
 	return 0;
 

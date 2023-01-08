@@ -36,23 +36,14 @@
 #endif
 
 
-#define MAJOR_VERSION	0
-#define MINOR_VERSION	2
+#define MAJOR_VERSION	1
+#define MINOR_VERSION	0
 #define UPDATE_VERSION	0
 
 
 /*****************************************************************************/
 /*                             MEMORY LOCATIONS                              */
 /*****************************************************************************/
-
-// temp storage for data outside of normal cc65 visibility - extra memory!
-#define STORAGE_STRING_MERGE_BUFFER		global_temp_buff_192b_1		// 192 bytes
-#define STORAGE_STRING_MERGE_BUFFER_SIZE	192 // will use for snprintf, strncpy, etc.
-
-
-// TEMP DEFINES - remove after bug testing completes
-#define STORAGE_INTERBANK_BUFFER		0x6000	// 1-page buffer. see cc65 memory config file. this is outside cc65 space.
-#define STORAGE_INTERBANK_BUFFER_LEN	0x0100	// 1-page buffer. see cc65 memory config file. this is outside cc65 space.
 
 
 /*****************************************************************************/

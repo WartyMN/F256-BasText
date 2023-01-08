@@ -38,7 +38,6 @@
 /*****************************************************************************/
 
 // project includes
-#include "lk_general.h"
 #include <f256jr.h>
 
 // C includes

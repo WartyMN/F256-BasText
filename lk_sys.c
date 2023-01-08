@@ -187,7 +187,6 @@ bool Sys_InitSystem(void)
 	// LOGIC: we need to know how many screens it has before allocating screen objects
 	if (Sys_AutoDetectMachine() == false)
 	{
-		LOG_ERR(("%s %d: Detected machine hardware is incompatible with this software", __func__ , __LINE__));
 		return false;
 	}
 	
@@ -195,7 +194,6 @@ bool Sys_InitSystem(void)
 	
 	if (Sys_AutoConfigure() == false)
 	{
-		LOG_ERR(("%s %d: Auto configure failed", __func__, __LINE__));
 		return false;
 	}
 
@@ -253,7 +251,6 @@ bool Sys_AutoDetectMachine(void)
 	//asm("stp");
 // 	the_machine_id = (R8(MACHINE_ID_REGISTER) & MACHINE_MODEL_MASK);
 	the_machine_id = MACHINE_F256_JR; // emulator might not have machine_id_register set, I'm only seeing a 0 there. 
-	DEBUG_OUT(("%s %d: the_machine_id=%u, gabe raw value=%u", __func__, __LINE__, the_machine_id, R8(MACHINE_ID_REGISTER)));
 	
 	Sys_RestoreIOPage();
 	
@@ -312,7 +309,6 @@ bool Sys_AutoConfigure(void)
 		// use auto configure to set resolution, text cols, margins, etc
 		if (Sys_DetectScreenSize() == false)
 		{
-			LOG_ERR(("%s %d: Unable to auto-configure screen resolution", __func__, __LINE__));
 			return false;
 		}
 
@@ -463,7 +459,6 @@ bool Sys_SetVideoMode(uint8_t new_mode)
 	}
 	else
 	{
-		LOG_ERR(("%s %d: specified video mode is not legal for this screen %u", __func__, __LINE__, new_mode));
 		return false;
 	}
 	
@@ -480,7 +475,6 @@ bool Sys_SetVideoMode(uint8_t new_mode)
 	// teach screen about the new settings
 	if (Sys_DetectScreenSize() == false)
 	{
-		LOG_ERR(("%s %d: Changed screen resolution, but the selected resolution could not be handled", __func__, __LINE__, new_mode));
 		return false;
 	}
 

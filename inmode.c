@@ -24,7 +24,7 @@ static char text[512];
  * 		output - open file, to write to
  * out:	none
  */
-void inconvert(FILE* in_file, FILE* output_fd, int16_t cbm_addr)
+void inconvert(FILE* in_file, FILE* out_file, int16_t cbm_addr)
 {
 	int16_t		expected_len;
 // 	int16_t		actual_len;
@@ -59,6 +59,9 @@ void inconvert(FILE* in_file, FILE* output_fd, int16_t cbm_addr)
 		 *  [4-n]- tokenized line, null terminated /  detokenize
 		 */
 
+		/* Read address to next line */
+// 		nextadr = fgetc(in_file); // low byte
+// 		nextadr |= fgetc(in_file) << 8; // high byte
 		addr_lo = fgetc(in_file); // low byte
 
 		if (addr_lo < 0)
@@ -67,8 +70,6 @@ void inconvert(FILE* in_file, FILE* output_fd, int16_t cbm_addr)
 			exit_with_wait(ERROR_UNABLE_TO_OPEN_OUTPUT_FILE);
 		}
 	
-		printf("first char of addr=%x \n", addr_lo);
-
 		addr_hi = fgetc(in_file); // low byte
 
 		if (addr_hi < 0)
@@ -77,14 +78,8 @@ void inconvert(FILE* in_file, FILE* output_fd, int16_t cbm_addr)
 			exit_with_wait(ERROR_UNABLE_TO_OPEN_OUTPUT_FILE);
 		}
 	
-		printf("2nd char of addr=%x", addr_hi);
 		nextadr = addr_lo + (addr_hi << 8);
-		printf("next line address=%x (%x, %x) \n", nextadr, addr_hi, addr_lo);
 
-
-		/* Read address to next line */
-// 		nextadr = fgetc(in_file); // low byte
-// 		nextadr |= fgetc(in_file) << 8; // high byte
 		
 		if (nextadr < 0 || nextadr == 1)
 		{
@@ -115,16 +110,12 @@ void inconvert(FILE* in_file, FILE* output_fd, int16_t cbm_addr)
 				detokenized_len = detokenize(buf, text, mode);
 
 				/* Write to output */			
-				#ifdef TRY_TO_WRITE_TO_DISK
-					fwrite(text, 1, detokenized_len, output_fd);
-				#endif
+				fwrite(text, 1, detokenized_len, out_file);
 				
 				// dump to screen
 				printf("%s", text);
 				
 				/* Read address to next line */
-// 				nextadr = fgetc(in_file); // low byte
-// 				nextadr |= fgetc(in_file) << 8; // high byte
 				addr_lo = fgetc(in_file); // low byte
 				addr_hi = fgetc(in_file); // low byte
 				nextadr = addr_lo + (addr_hi << 8);

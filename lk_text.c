@@ -17,7 +17,6 @@
 
 // project includes
 #include "lk_text.h"
-#include "lk_general.h"
 #include "lk_sys.h"
 
 // C includes
@@ -344,7 +343,6 @@ bool Text_FillBoxCharOnly(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_
 	
 	if (x1 > x2 || y1 > y2)
 	{
-		LOG_ERR(("%s %d: illegal coordinates", __func__, __LINE__));
 		return false;
 	}
 
@@ -374,7 +372,6 @@ bool Text_FillBoxAttrOnly(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_
 	
 	if (x1 > x2 || y1 > y2)
 	{
-		LOG_ERR(("%s %d: illegal coordinates", __func__, __LINE__));
 		return false;
 	}
 
@@ -452,7 +449,6 @@ bool Text_UpdateFontData(char* new_font_data)
 {
 	if (new_font_data == NULL)
 	{
-		LOG_ERR(("%s %d: passed font data was NULL", __func__, __LINE__));
 		return false;
 	}
 
